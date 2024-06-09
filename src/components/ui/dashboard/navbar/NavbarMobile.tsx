@@ -68,7 +68,7 @@ function NavbarMobile() {
                   <Link
                     href={item.path}
                     onClick={() => toggleOpen()}
-                    className={`flex w-full text-2xl ${
+                    className={`flex w-full ${
                       item.path === pathname ? 'font-bold' : ''
                     }`}
                   >
