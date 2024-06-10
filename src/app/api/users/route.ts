@@ -1,15 +1,29 @@
-import { NextApiRequest, NextApiResponse } from "next";
-import adminService from "../../service/adminService"; // Adjust the path to your adminService
+import { NextRequest, NextResponse } from "next/server";
+import adminService from "../../service/adminService";
 
-import { NextRequest, NextResponse } from 'next/server';
-import connectionPool from '../../config/db'; // Adjust the path as necessary
+// export async function GET(req: NextRequest) {
+//     try {
+//       const response = await adminService.getAllUsers();
+//       return NextResponse.json({ data: response });
+//     } catch (error) {
+//       console.error("Error in getAllUsers:", error);
+//       return NextResponse.json(
+//         { message: "Internal Server Error" },
+//         { status: 500 }
+//       );
+//     }
+//   }
 
-export async function GET(req: NextRequest) {
+export async function getAllUsers(req: NextRequest) {
     try {
-        const [rows] = await connectionPool.query('SELECT * FROM users');
-        return NextResponse.json({ data: rows, });
+        const response = await adminService.getAllUsers();
+        return NextResponse.json({ data: response });
     } catch (error) {
-        console.error('Error in getAllUsers:', error);
-        return NextResponse.json({ message: 'Internal Server Error' }, { status: 500 });
+        console.error("Error in getAllUsers:", error);
+        return NextResponse.json(
+            { message: "Internal Server Error" },
+            { status: 500 }
+        );
     }
 }
+  
