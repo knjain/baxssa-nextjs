@@ -17,7 +17,8 @@ export const authOptions: NextAuthOptions = {
       async authorize(credentials: any, req): Promise<any> {
         try {
           // Extract credentials from the request
-          const { email, password } = credentials.identifier;
+          const email = credentials.identifier;
+          const password = credentials.password;
 
           // Query the admin table to find the user
           const query = `
@@ -32,15 +33,12 @@ export const authOptions: NextAuthOptions = {
 
           // Check if user found and password matches
           if (rows.length > 0) {
-            const admin = rows[0];
+            const user = rows[0];
             // Use bcrypt to compare passwords
-            const passwordMatch = await bcrypt.compare(
-              password,
-              admin.password
-            );
+            const passwordMatch = await bcrypt.compare(password, user.password);
             if (passwordMatch) {
               // Return the user object
-              return admin;
+              return user;
             }
           } else {
             throw new Error("No user found with this Email Id.");
@@ -51,4 +49,31 @@ export const authOptions: NextAuthOptions = {
       },
     }),
   ],
+  callbacks: {
+    async session({ session, token }) {
+      if (token) {
+        session.user.id = token.id;
+        session.user.fullName = token.fullName;
+        session.user.email = token.email;
+      }
+      return session;
+    },
+    async jwt({ token, user }) {
+      if (user) {
+        token.id = user.id?.toString();
+        token.fullName = user.fullName;
+        token.email = user.email;
+      }
+      return token;
+    },
+  },
+  pages: {
+    signIn: "/sign-in",
+  },
+  session: {
+    strategy: "jwt",
+  },
+  secret: process.env.AUTH_SECRET,
 };
+
+export default authOptions
