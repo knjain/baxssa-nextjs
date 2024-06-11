@@ -5,7 +5,6 @@ import { useForm, FormProvider } from "react-hook-form";
 import { z } from "zod";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { signUpSchema } from "@/schemas/signUpSchema";
 import axios, { AxiosError } from "axios";
 import { useToast } from "@/components/ui/use-toast";
 import { Apiresponse } from "@/app/types/ApiResponse";
@@ -20,52 +19,60 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
+import { signInSchema } from "@/schemas/signInSchema";
+import { signIn } from "next-auth/react";
 
-const Page: React.FC = () => {
+function Page() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
   const router = useRouter();
 
   // zod implementation
-  const formMethods = useForm<z.infer<typeof signUpSchema>>({
-    resolver: zodResolver(signUpSchema),
+  const formMethods = useForm<z.infer<typeof signInSchema>>({
+    resolver: zodResolver(signInSchema),
     defaultValues: {
       email: "",
       password: "",
-      fullName: "",
-      phoneNumber: "",
     },
   });
 
-  const onSubmit = async (data: z.infer<typeof signUpSchema>) => {
-    setIsSubmitting(true);
+  const onSubmit = async (data: z.infer<typeof signInSchema>) => {
     try {
-      console.log(data);
-      const response = await axios.post("/api/sign-up", data);
-      if (response?.data?.success) {
-        toast({
-          title: "Success",
-          description: response.data.message,
-        });
-        router.replace("/dashboard");
+      const result = await signIn("credentials", {
+        redirect: false,
+        identifier: data.email,
+        password: data.password,
+      });
+      console.log(result);
+      if (result?.error) {
+        if (result.error == "CredentialsSignin") {
+          toast({
+            title: "Login Failed",
+            description: "Incorect email or password",
+            variant: "destructive",
+          });
+        } else {
+          toast({
+            title: "Error",
+            description: result.error,
+            variant: "destructive",
+          });
+        }
+        
+        if (result?.url) {
+          setIsSubmitting(true);
+          router.replace("/dashboard");
+        }
       }
     } catch (error) {
-      console.log("Error in creating new Admin", error);
-      const AxiosError = error as AxiosError<Apiresponse>;
-      let errorMessage = AxiosError?.response?.data?.message;
-      toast({
-        title: "New Admin creation failed",
-        description: errorMessage,
-        variant: "destructive",
-      });
-    } finally {
-      setIsSubmitting(false);
+      console.log(error)
     }
   };
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-100">
       <div className="w-full max-w-md p-8 space-y-8 bg-white rounded-lg shadow-md">
+        <h1 className="text-center text-xl">Sign In</h1>
         <FormProvider {...formMethods}>
           <form
             onSubmit={formMethods.handleSubmit(onSubmit)}
@@ -84,32 +91,7 @@ const Page: React.FC = () => {
                 </FormItem>
               )}
             />
-            <FormField
-              control={formMethods.control}
-              name="fullName"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Full Name</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Full Name" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={formMethods.control}
-              name="phoneNumber"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Phone Number</FormLabel>
-                  <FormControl>
-                    <Input placeholder="10 Digit Phone Number" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+
             <FormField
               control={formMethods.control}
               name="password"
@@ -130,20 +112,20 @@ const Page: React.FC = () => {
                   Please wait
                 </>
               ) : (
-                "Sign Up"
+                "Sign In"
               )}
             </Button>
           </form>
         </FormProvider>
         {/* <p>
-          Already a member?
-          <Link href="/sign-in" className="text-blue-600 hover:text-blue-800">
-            Sign in
+          New User?
+          <Link href="/sign-up" className="text-blue-600 hover:text-blue-800">
+            Sign up
           </Link>
         </p> */}
       </div>
     </div>
   );
-};
+}
 
 export default Page;

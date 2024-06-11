@@ -21,7 +21,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
 
-const Page: React.FC = () => {
+function Page() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
   const router = useRouter();
@@ -40,7 +40,7 @@ const Page: React.FC = () => {
   const onSubmit = async (data: z.infer<typeof signUpSchema>) => {
     setIsSubmitting(true);
     try {
-      console.log(data);
+      //console.log(data);
       const response = await axios.post("/api/sign-up", data);
       if (response?.data?.success) {
         toast({
@@ -144,6 +144,6 @@ const Page: React.FC = () => {
       </div>
     </div>
   );
-};
+}
 
 export default Page;

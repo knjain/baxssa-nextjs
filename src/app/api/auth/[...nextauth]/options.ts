@@ -30,10 +30,10 @@ export const authOptions: NextAuthOptions = {
           const [rows, fields] = (await connectionPool.query(query, [
             email,
           ])) as [RowDataPacket[], FieldPacket[]];
-
           // Check if user found and password matches
-          if (rows.length > 0) {
+          if ([rows].length > 0) {
             const user = rows[0];
+
             // Use bcrypt to compare passwords
             const passwordMatch = await bcrypt.compare(password, user.password);
             if (passwordMatch) {
@@ -60,7 +60,7 @@ export const authOptions: NextAuthOptions = {
     },
     async jwt({ token, user }) {
       if (user) {
-        token.id = user.id?.toString();
+        token.id = user.adminId?.toString();
         token.fullName = user.fullName;
         token.email = user.email;
       }
@@ -76,4 +76,4 @@ export const authOptions: NextAuthOptions = {
   secret: process.env.AUTH_SECRET,
 };
 
-export default authOptions
+export default authOptions;
