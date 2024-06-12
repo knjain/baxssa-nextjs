@@ -1,29 +1,39 @@
-"use client"
-import React from 'react'
-import { useEffect } from 'react';
+import { BASE_API_URL } from "@/constants/constants";
+import React from "react";
 
-function UsersPage() {
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch('/api/users');
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        const data = await response.json();
-        console.log('Users data:', data);
-      } catch (error) {
-        console.error('Error fetching users:', error);
-      }
-    };
-
-    fetchData();
-  }, []);
-
-  return (
-    <div>UserPage</div>
-  )
+// Fetch data on the server
+async function fetchData() {
+  const response = await fetch(`${BASE_API_URL}/users`, {
+    cache: "no-store",
+  });
+  if (!response.ok) {
+    throw new Error("Network response was not ok");
+  }
+  const data = await response.json();
+  return data.data; // Access the 'data' array directly
 }
 
-export default UsersPage
+const UsersPage = async () => {
+  const users = await fetchData();
+
+  interface user {
+    userId: string;
+    fullName: string;
+    email: string;
+    phoneNumber: string;
+  }
+  return (
+    <div>
+      <h1>Users</h1>
+      <ul>
+        {users.map((user: user) => (
+          <li key={user.userId}>
+            {user.fullName} - {user.email} - {user.phoneNumber}
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+};
+
+export default UsersPage;

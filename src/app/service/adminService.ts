@@ -1,46 +1,27 @@
-// import connectionPool from '../config/db'; // Adjust the path to your connection pool setup
-
-// const adminService = {
-//   getAllUsers: async () => {
-//     return new Promise((resolve, reject) => {
-//       connectionPool.getConnection((err, connection) => {
-//         if (err) {
-//           console.log("Error in creating connection in getAllUsers service", err);
-//           reject(err);
-//           return;
-//         }
-
-//         try {
-//           const getUsersQuery = `SELECT * FROM users`;
-
-//           connection.query(getUsersQuery, (err, results) => {
-//             if (err) {
-//               console.log("Error in query in getAllUsers:", err);
-//               reject(err);
-//             } else {
-//               resolve(results);
-//             }
-//           });
-//         } catch (error) {
-//           console.log("Error in getAllUsers:", error);
-//           reject(error);
-//         } finally {
-//           console.log("Connection is released for getAllUsers");
-//           connection.release();
-//         }
-//       });
-//     });
-//   },
-// };
-
-// export default adminService;
 import connectionPool from "../config/db";
+import { RowDataPacket } from "mysql2";
+
+interface User {
+  userId: number;
+  fullName: string;
+  email: string;
+  phoneNumber: string | null;
+}
 
 const adminService = {
-  getAllUsers: async () => {
+  getAllUsers: async (): Promise<User[]> => {
     try {
-      const [rows] = await connectionPool.query("SELECT * FROM users");
-      return rows;
+      const [rows] = await connectionPool.query<RowDataPacket[]>(
+        "SELECT userId, fullName, email, phoneNumber FROM users"
+      );
+      const filteredData = rows.map((user: any) => ({
+        userId: user.userId,
+        fullName: user.fullName,
+        email: user.email,
+        phoneNumber: user.phoneNumber,
+      }));
+      
+      return filteredData;
     } catch (error) {
       console.log("Error in getAllUsers:", error);
       throw error;
