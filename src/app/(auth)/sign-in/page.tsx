@@ -58,14 +58,14 @@ function Page() {
             variant: "destructive",
           });
         }
-        
-        if (result?.url) {
-          setIsSubmitting(true);
-          router.replace("/dashboard");
-        }
+      }
+      if (result?.url) {
+        setIsSubmitting(true);
+        console.log("ehere");
+        router.replace("/dashboard");
       }
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
   };
 
@@ -105,7 +105,7 @@ function Page() {
                 </FormItem>
               )}
             />
-            <Button type="submit" disabled={isSubmitting}>
+            {/* <Button type="submit" disabled={isSubmitting}>
               {isSubmitting ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -114,7 +114,10 @@ function Page() {
               ) : (
                 "Sign In"
               )}
-            </Button>
+            </Button> */}
+            <Button type="submit" >
+              sign in
+            </Button> 
           </form>
         </FormProvider>
         {/* <p>
