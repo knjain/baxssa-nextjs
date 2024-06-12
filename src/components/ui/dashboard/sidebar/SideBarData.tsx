@@ -1,11 +1,11 @@
-import { Icon } from '@iconify/react';
+import { Icon } from "@iconify/react";
 
-import { SideNavItem } from './types';
+import { SideNavItem } from "./types";
 
 export const SIDENAV_ITEMS: SideNavItem[] = [
   {
-    title: 'Dashboard',
-    path: '/dashboard',
+    title: "Dashboard",
+    path: "/dashboard",
     icon: <Icon icon="lucide:home" width="24" height="24" />,
   },
   // {
@@ -20,25 +20,29 @@ export const SIDENAV_ITEMS: SideNavItem[] = [
   //   ],
   // },
   {
-    title: 'User Details',
-    path: '/messages',
-    icon: <Icon icon="lucide:mail" width="24" height="24" />,
-  },{
-    title: 'Order Details',
-    path: '/messages',
-    icon: <Icon icon="lucide:mail" width="24" height="24" />,
-  },{
-    title: 'Product Details',
-    path: '/messages',
-    icon: <Icon icon="lucide:mail" width="24" height="24" />,
-  },{
-    title: 'Client Details',
-    path: '/messages',
-    icon: <Icon icon="lucide:mail" width="24" height="24" />,
-  },{
-    title: 'Admin settings',
-    path: '/messages',
-    icon: <Icon icon="lucide:mail" width="24" height="24" />,
+    title: "User Details",
+    path: "/dashboard/users",
+    icon: <Icon icon="lucide:users" width="24" height="24" />,
+  },
+  {
+    title: "Order Details",
+    path: "/products",
+    icon: <Icon icon="lucide:package" width="24" height="24" />,
+  },
+  {
+    title: "Client Details",
+    path: "/messages",
+    icon: <Icon icon="lucide:users" width="24" height="24" />,
+  },
+  {
+    title: "Product Details",
+    path: "/messages",
+    icon: <Icon icon="lucide:package" width="24" height="24" />,
+  },
+  {
+    title: "Admin settings",
+    path: "/messages",
+    icon: <Icon icon="lucide:settings" width="24" height="24" />,
   },
   // {
   //   title: 'Settings',
