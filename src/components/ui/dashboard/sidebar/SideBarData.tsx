@@ -36,7 +36,7 @@ export const SIDENAV_ITEMS: SideNavItem[] = [
   },
   {
     title: "Product Details",
-    path: "/messages",
+    path: "/dashboard/products",
     icon: <Icon icon="lucide:package" width="24" height="24" />,
   },
   {
