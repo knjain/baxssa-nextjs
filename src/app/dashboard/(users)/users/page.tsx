@@ -3,8 +3,8 @@ import { BASE_API_URL } from "@/constants/constants";
 import React from "react";
 import Link from "next/link";
 import { DataTable } from "./data-table";
-import { columns } from "./columns";
-async function fetchData() {
+import { User, columns } from "./columns";
+async function fetchData(): Promise<User[]> {
   try {
     const response = await axios.get(`${BASE_API_URL}/users`, {
       headers: {
@@ -30,9 +30,17 @@ const UsersPage = async () => {
 
   return (
     <div>
-      <h1>Users</h1>
-      <Link href={`/dashboard/addNewUser`}>ADD NEW USER</Link>
-      <DataTable columns={columns} data={users}/>
+      <h1 className="text-center text-3xl">User List</h1>
+      <div className=" mb-5 mt-3 md:mt-0 lg:ml-[1028px]">
+        <Link
+          href={`/dashboard/addNewUser`}
+          className=" shadow-md rounded-md bg-blue-200 md:px-6 md:py-3 px-2 py-1"
+        >
+          ADD NEW USER
+        </Link>
+      </div>
+
+      <DataTable columns={columns} data={users} />
     </div>
   );
 };
