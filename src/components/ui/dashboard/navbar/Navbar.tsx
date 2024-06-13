@@ -17,7 +17,7 @@ function Navbar() {
   return (
     <div
       className={cn(
-        `sticky inset-x-0 top-0 z-30 w-full transition-all border-b border-gray-200 shadow-xl`,
+        `sticky inset-x-0 top-0 z-30 w-full transition-all border-b border-gray-200 shadow-md`,
         {
           "border-b border-gray-200 bg-white/75 backdrop-blur-lg": scrolled,
           "border-b border-gray-200 bg-white": selectedLayout,

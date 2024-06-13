@@ -2,7 +2,8 @@ import axios from "axios";
 import { BASE_API_URL } from "@/constants/constants";
 import React from "react";
 import Link from "next/link";
-import UserCardComponet from "./UserCardComponet";
+import { DataTable } from "./data-table";
+import { columns } from "./columns";
 async function fetchData() {
   try {
     const response = await axios.get(`${BASE_API_URL}/users`, {
@@ -27,18 +28,11 @@ async function fetchData() {
 const UsersPage = async () => {
   const users = await fetchData();
 
-  interface User {
-    userId: string;
-    fullName: string;
-    email: string;
-    phoneNumber: string;
-  }
-
   return (
     <div>
       <h1>Users</h1>
       <Link href={`/dashboard/addNewUser`}>ADD NEW USER</Link>
-      <UserCardComponet users={users}/>
+      <DataTable columns={columns} data={users}/>
     </div>
   );
 };
