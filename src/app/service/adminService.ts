@@ -27,6 +27,10 @@ const adminService = {
       throw error;
     }
   },
+
+  cretaeNewUser:async()=>{
+    
+  }
 };
 
 export default adminService;
