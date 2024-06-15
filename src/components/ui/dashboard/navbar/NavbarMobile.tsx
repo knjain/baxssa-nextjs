@@ -84,6 +84,7 @@ function NavbarMobile() {
           );
         })}
       </motion.ul>
+      
       <MenuToggle toggle={toggleOpen} />
     </motion.nav>
   );
