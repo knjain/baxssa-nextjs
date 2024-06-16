@@ -8,6 +8,20 @@ interface User {
   phoneNumber: string | null;
 }
 
+interface CreateUserParams {
+  fullName: string;
+  email: string;
+  phoneNumber: string;
+  hashedPassword: string;
+  createdBy?: string;
+}
+
+interface CreateUserResult {
+  // Define the structure of the result based on your database response
+  insertId: number;
+  affectedRows: number;
+}
+
 const adminService = {
   getAllUsers: async (): Promise<User[]> => {
     try {
@@ -20,7 +34,7 @@ const adminService = {
         email: user.email,
         phoneNumber: user.phoneNumber,
       }));
-      
+
       return filteredData;
     } catch (error) {
       console.log("Error in getAllUsers:", error);
@@ -28,9 +42,33 @@ const adminService = {
     }
   },
 
-  cretaeNewUser:async()=>{
-    
-  }
+  createNewUser: async ({
+    email,
+    hashedPassword,
+    fullName,
+    phoneNumber,
+    createdBy,
+  }: CreateUserParams): Promise<CreateUserResult> => {
+    try {
+      const createUserQuery = `
+        INSERT INTO users (fullName, email, createdBy, phoneNumber, password, registeredOn)
+        VALUES (?, ?, ?, ?, ?, ?)
+      `;
+      const [results] = await connectionPool.execute(createUserQuery, [
+        fullName,
+        email,
+        createdBy,
+        phoneNumber,
+        hashedPassword,
+        new Date(),
+      ]);
+      console.log([results] )
+      return results as CreateUserResult;
+    } catch (error) {
+      console.error("Error in createNewUser:", error);
+      throw error;
+    }
+  },
 };
 
 export default adminService;
