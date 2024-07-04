@@ -168,13 +168,7 @@ import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { User } from "next-auth";
-
-const newUserSchema = z.object({
-  email: z.string().email("Invalid email"),
-  fullName: z.string().min(1, "Full name is required"),
-  phoneNumber: z.string().regex(/^\d{10}$/, "Phone number must be 10 digits"),
-  password: z.string().min(6, "Password must be at least 6 characters"),
-});
+import { newUserSchema } from "@/schemas/newUserSchema";
 
 type NewUserSchema = z.infer<typeof newUserSchema>;
 

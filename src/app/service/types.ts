@@ -19,3 +19,14 @@ interface User {
     affectedRows: number;
     // Add more fields if necessary
   }
+
+  ///////////////////PRODUCT TYPES/////////////////
+  interface Product {
+    productId: number;
+    productName: string;
+    productCode: string;
+    productImageUrl: string;
+    description: string;
+    type: string;
+    subType: string;
+  }

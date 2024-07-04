@@ -1,6 +1,6 @@
 import React from 'react'
 
-function ProductPage() {
+const ProductPage = () => {
   return (
     <div>ProductPage</div>
   )
