@@ -22,7 +22,6 @@
 //     type: "",
 //     subType: "",
 //     description: "",
-
 //   });
 //   const [imageFile, setImageFile] = useState<File | null>(null);
 //   const [errors, setErrors] = useState<Partial<NewProductSchema>>({});
@@ -30,7 +29,7 @@
 //   const { toast } = useToast();
 //   const router = useRouter();
 //   const { data: session } = useSession();
-//   const user: User = session?.user as User; // If you don't want to do this assertion, directly use session?.user.productCode wherever required.
+//   const user: User = session?.user as User;
 
 //   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
 //     const { name, value } = e.target;
@@ -58,21 +57,41 @@
 //   };
 
 //   const handleSubmit = async (e: FormEvent) => {
-//     console.log(formData);
 //     e.preventDefault();
 //     if (!validate()) return;
 
+//     if (!imageFile) {
+//       toast({
+//         title: "Image required",
+//         description: "Please upload an Image",
+//         variant: "destructive",
+//       });
+//       return;
+//     }
+
 //     setIsSubmitting(true);
 //     try {
-//       const requestData = { ...formData, createdBy: user.fullName };
+//       const formDataToSubmit = new FormData();
+//       formDataToSubmit.append("productName", formData.productName);
+//       formDataToSubmit.append("productCode", formData.productCode);
+//       formDataToSubmit.append("type", formData.type);
+//       formDataToSubmit.append("subType", formData.subType);
+//       formDataToSubmit.append("description", formData.description);
+//       formDataToSubmit.append("createdBy", user.fullName || "");
 //       if (imageFile) {
-//         requestData.append("file", imageFile);
+//         formDataToSubmit.append("file", imageFile);
 //       }
+
 //       const response = await axios.post(
-//         ` http://localhost:5000/api/v1/products/createNewProduct`,
-//         requestData
+//         `http://localhost:5000/api/v1/products/createNewProduct`,
+//         formDataToSubmit,
+//         {
+//           headers: {
+//             "Content-Type": "multipart/form-data",
+//           },
+//         }
 //       );
-//       console.log(response);
+
 //       if (response?.data?.data?.affectedRows == 1) {
 //         toast({
 //           title: "Success",
@@ -81,7 +100,6 @@
 //         router.replace("/dashboard/products");
 //       }
 //     } catch (error) {
-//       console.log("Error in creating new User", error);
 //       const AxiosError = error as AxiosError<Apiresponse>;
 //       const errorMessage =
 //         AxiosError?.response?.data?.message || "An error occurred";
@@ -96,7 +114,7 @@
 //   };
 
 //   return (
-//     <div className="flex justify-center items-center max-h-screen py-6">
+//     <div className="flex justify-center items-center  py-6">
 //       <div className="w-full max-w-md py-5 px-8 space-y-8 bg-slate-500-300 rounded-lg shadow-lg border border-black">
 //         <h1 className="text-xl text-center">Create New Product</h1>
 //         <form onSubmit={handleSubmit} className="space-y-6">
@@ -160,7 +178,11 @@
 //           </div>
 //           <div>
 //             <label>Product Image</label>
-//             <Input type="file" onChange={handleFileChange} />
+//             <Input
+//               type="file"
+//               onChange={handleFileChange}
+//               className="bg-gray-200 rounded-xl shadow-lg hover:cursor-pointer border border-gray-500"
+//             />
 //           </div>
 //           <Button type="submit">
 //             {isSubmitting ? (
@@ -242,6 +264,15 @@ const newProdcutPage = () => {
     e.preventDefault();
     if (!validate()) return;
 
+    if (!imageFile) {
+      toast({
+        title: "Image required",
+        description: "Please upload an Image",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setIsSubmitting(true);
     try {
       const formDataToSubmit = new FormData();
@@ -256,7 +287,7 @@ const newProdcutPage = () => {
       }
 
       const response = await axios.post(
-        `http://localhost:5000/api/v1/products/createNewProduct`,
+        `${BACKEND_API_URL}/api/v1/products/createNewProduct`,
         formDataToSubmit,
         {
           headers: {
@@ -287,71 +318,81 @@ const newProdcutPage = () => {
   };
 
   return (
-    <div className="flex justify-center items-center max-h-screen py-6">
-      <div className="w-full max-w-md py-5 px-8 space-y-8 bg-slate-500-300 rounded-lg shadow-lg border border-black">
+    <div className="flex justify-center items-center py-6">
+      <div className="w-full max-w-md py-5 px-8 space-y-8 bg-slate-500-300 rounded-lg shadow-xl">
         <h1 className="text-xl text-center">Create New Product</h1>
         <form onSubmit={handleSubmit} className="space-y-6">
-          <div>
-            <label>Product Name</label>
-            <Input
-              name="productName"
-              placeholder="Product Name "
-              value={formData.productName}
-              onChange={handleChange}
-            />
-            {errors.productName && (
-              <p className="text-red-500">{errors.productName}</p>
-            )}
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+            <div>
+              <label>Product Name</label>
+              <Input
+                name="productName"
+                placeholder="Product Name"
+                value={formData.productName}
+                onChange={handleChange}
+              />
+              {errors.productName && (
+                <p className="text-red-500">{errors.productName}</p>
+              )}
+            </div>
+            <div>
+              <label>Product Code</label>
+              <Input
+                name="productCode"
+                placeholder="Product Code"
+                value={formData.productCode}
+                onChange={handleChange}
+              />
+              {errors.productCode && (
+                <p className="text-red-500">{errors.productCode}</p>
+              )}
+            </div>
           </div>
-          <div>
-            <label>Product Code</label>
-            <Input
-              name="productCode"
-              placeholder="Product Code"
-              value={formData.productCode}
-              onChange={handleChange}
-            />
-            {errors.productCode && (
-              <p className="text-red-500">{errors.productCode}</p>
-            )}
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+            <div>
+              <label>Product Type</label>
+              <Input
+                name="type"
+                placeholder="Type"
+                value={formData.type}
+                onChange={handleChange}
+              />
+              {errors.type && <p className="text-red-500">{errors.type}</p>}
+            </div>
+            <div>
+              <label>Product Sub-Type</label>
+              <Input
+                name="subType"
+                placeholder="Sub Type"
+                value={formData.subType}
+                onChange={handleChange}
+              />
+              {errors.subType && (
+                <p className="text-red-500">{errors.subType}</p>
+              )}
+            </div>
           </div>
-          <div>
-            <label>Product Type</label>
-            <Input
-              name="type"
-              placeholder="Type"
-              value={formData.type}
-              onChange={handleChange}
-            />
-            {errors.type && <p className="text-red-500">{errors.type}</p>}
-          </div>
-          <div>
-            <label>Product Sub-Type</label>
-            <Input
-              name="subType"
-              type="subType"
-              placeholder="Sub Type"
-              value={formData.subType}
-              onChange={handleChange}
-            />
-            {errors.subType && <p className="text-red-500">{errors.subType}</p>}
-          </div>
-          <div>
-            <label>Description</label>
-            <Input
-              name="description"
-              type="description"
-              placeholder="Description"
-              value={formData.description}
-              onChange={handleChange}
-            />
-            {errors.description && (
-              <p className="text-red-500">{errors.description}</p>
-            )}
-          </div>
-          <div>
-            <label>Product Image</label>
-            <Input type="file" onChange={handleFileChange} />
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+            <div className="md:col-span-2">
+              <label>Description</label>
+              <Input
+                name="description"
+                placeholder="Description"
+                value={formData.description}
+                onChange={handleChange}
+              />
+              {errors.description && (
+                <p className="text-red-500">{errors.description}</p>
+              )}
+            </div>
+            <div className="md:col-span-2">
+              <label>Product Image</label>
+              <Input
+                type="file"
+                onChange={handleFileChange}
+                className="bg-gray-200 rounded-xl shadow-lg hover:cursor-pointer border border-gray-500"
+              />
+            </div>
           </div>
           <Button type="submit">
             {isSubmitting ? (
