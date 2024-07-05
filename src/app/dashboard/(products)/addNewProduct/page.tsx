@@ -1,3 +1,185 @@
+// "use client";
+// import React, { useState, ChangeEvent, FormEvent } from "react";
+// import { z } from "zod";
+// import { useRouter } from "next/navigation";
+// import axios, { AxiosError } from "axios";
+// import { useToast } from "@/components/ui/use-toast";
+// import { Apiresponse } from "@/app/types/ApiResponse";
+// import { Input } from "@/components/ui/input";
+// import { Button } from "@/components/ui/button";
+// import { Loader2 } from "lucide-react";
+// import { useSession } from "next-auth/react";
+// import { User } from "next-auth";
+// import { newProductSchema } from "@/schemas/newProductSchema";
+// import { BACKEND_API_URL } from "@/constants/constants";
+
+// type NewProductSchema = z.infer<typeof newProductSchema>;
+
+// const newProdcutPage = () => {
+//   const [formData, setFormData] = useState<NewProductSchema>({
+//     productName: "",
+//     productCode: "",
+//     type: "",
+//     subType: "",
+//     description: "",
+
+//   });
+//   const [imageFile, setImageFile] = useState<File | null>(null);
+//   const [errors, setErrors] = useState<Partial<NewProductSchema>>({});
+//   const [isSubmitting, setIsSubmitting] = useState(false);
+//   const { toast } = useToast();
+//   const router = useRouter();
+//   const { data: session } = useSession();
+//   const user: User = session?.user as User; // If you don't want to do this assertion, directly use session?.user.productCode wherever required.
+
+//   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+//     const { name, value } = e.target;
+//     setFormData((prevData) => ({ ...prevData, [name]: value }));
+//   };
+
+//   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+//     if (e.target.files && e.target.files[0]) {
+//       setImageFile(e.target.files[0]);
+//     }
+//   };
+
+//   const validate = () => {
+//     const result = newProductSchema.safeParse(formData);
+//     if (!result.success) {
+//       const newErrors: Partial<NewProductSchema> = {};
+//       for (const issue of result.error.issues) {
+//         newErrors[issue.path[0] as keyof NewProductSchema] = issue.message;
+//       }
+//       setErrors(newErrors);
+//       return false;
+//     }
+//     setErrors({});
+//     return true;
+//   };
+
+//   const handleSubmit = async (e: FormEvent) => {
+//     console.log(formData);
+//     e.preventDefault();
+//     if (!validate()) return;
+
+//     setIsSubmitting(true);
+//     try {
+//       const requestData = { ...formData, createdBy: user.fullName };
+//       if (imageFile) {
+//         requestData.append("file", imageFile);
+//       }
+//       const response = await axios.post(
+//         ` http://localhost:5000/api/v1/products/createNewProduct`,
+//         requestData
+//       );
+//       console.log(response);
+//       if (response?.data?.data?.affectedRows == 1) {
+//         toast({
+//           title: "Success",
+//           description: "Product Created successfully",
+//         });
+//         router.replace("/dashboard/products");
+//       }
+//     } catch (error) {
+//       console.log("Error in creating new User", error);
+//       const AxiosError = error as AxiosError<Apiresponse>;
+//       const errorMessage =
+//         AxiosError?.response?.data?.message || "An error occurred";
+//       toast({
+//         title: "New Product creation failed",
+//         description: errorMessage,
+//         variant: "destructive",
+//       });
+//     } finally {
+//       setIsSubmitting(false);
+//     }
+//   };
+
+//   return (
+//     <div className="flex justify-center items-center max-h-screen py-6">
+//       <div className="w-full max-w-md py-5 px-8 space-y-8 bg-slate-500-300 rounded-lg shadow-lg border border-black">
+//         <h1 className="text-xl text-center">Create New Product</h1>
+//         <form onSubmit={handleSubmit} className="space-y-6">
+//           <div>
+//             <label>Product Name</label>
+//             <Input
+//               name="productName"
+//               placeholder="Product Name "
+//               value={formData.productName}
+//               onChange={handleChange}
+//             />
+//             {errors.productName && (
+//               <p className="text-red-500">{errors.productName}</p>
+//             )}
+//           </div>
+//           <div>
+//             <label>Product Code</label>
+//             <Input
+//               name="productCode"
+//               placeholder="Product Code"
+//               value={formData.productCode}
+//               onChange={handleChange}
+//             />
+//             {errors.productCode && (
+//               <p className="text-red-500">{errors.productCode}</p>
+//             )}
+//           </div>
+//           <div>
+//             <label>Product Type</label>
+//             <Input
+//               name="type"
+//               placeholder="Type"
+//               value={formData.type}
+//               onChange={handleChange}
+//             />
+//             {errors.type && <p className="text-red-500">{errors.type}</p>}
+//           </div>
+//           <div>
+//             <label>Product Sub-Type</label>
+//             <Input
+//               name="subType"
+//               type="subType"
+//               placeholder="Sub Type"
+//               value={formData.subType}
+//               onChange={handleChange}
+//             />
+//             {errors.subType && <p className="text-red-500">{errors.subType}</p>}
+//           </div>
+//           <div>
+//             <label>Description</label>
+//             <Input
+//               name="description"
+//               type="description"
+//               placeholder="Description"
+//               value={formData.description}
+//               onChange={handleChange}
+//             />
+//             {errors.description && (
+//               <p className="text-red-500">{errors.description}</p>
+//             )}
+//           </div>
+//           <div>
+//             <label>Product Image</label>
+//             <Input type="file" onChange={handleFileChange} />
+//           </div>
+//           <Button type="submit">
+//             {isSubmitting ? (
+//               <>
+//                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+//                 Please wait
+//               </>
+//             ) : (
+//               "Create New Product"
+//             )}
+//           </Button>
+//         </form>
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default newProdcutPage;
+
 "use client";
 import React, { useState, ChangeEvent, FormEvent } from "react";
 import { z } from "zod";
@@ -11,6 +193,7 @@ import { Loader2 } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { User } from "next-auth";
 import { newProductSchema } from "@/schemas/newProductSchema";
+import { BACKEND_API_URL } from "@/constants/constants";
 
 type NewProductSchema = z.infer<typeof newProductSchema>;
 
@@ -22,16 +205,23 @@ const newProdcutPage = () => {
     subType: "",
     description: "",
   });
+  const [imageFile, setImageFile] = useState<File | null>(null);
   const [errors, setErrors] = useState<Partial<NewProductSchema>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
   const router = useRouter();
   const { data: session } = useSession();
-  const user: User = session?.user as User; // If you don't want to do this assertion, directly use session?.user.productCode wherever required.
+  const user: User = session?.user as User;
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({ ...prevData, [name]: value }));
+  };
+
+  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      setImageFile(e.target.files[0]);
+    }
   };
 
   const validate = () => {
@@ -49,24 +239,40 @@ const newProdcutPage = () => {
   };
 
   const handleSubmit = async (e: FormEvent) => {
-    console.log(formData);
     e.preventDefault();
     if (!validate()) return;
 
     setIsSubmitting(true);
     try {
-      const requestData = { ...formData, createdBy: user.fullName };
-      const response = await axios.post("/api/users", requestData);
-      console.log(response);
+      const formDataToSubmit = new FormData();
+      formDataToSubmit.append("productName", formData.productName);
+      formDataToSubmit.append("productCode", formData.productCode);
+      formDataToSubmit.append("type", formData.type);
+      formDataToSubmit.append("subType", formData.subType);
+      formDataToSubmit.append("description", formData.description);
+      formDataToSubmit.append("createdBy", user.fullName || "");
+      if (imageFile) {
+        formDataToSubmit.append("file", imageFile);
+      }
+
+      const response = await axios.post(
+        `http://localhost:5000/api/v1/products/createNewProduct`,
+        formDataToSubmit,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
       if (response?.data?.data?.affectedRows == 1) {
         toast({
           title: "Success",
           description: "Product Created successfully",
         });
-        router.replace("/dashboard/users");
+        router.replace("/dashboard/products");
       }
     } catch (error) {
-      console.log("Error in creating new User", error);
       const AxiosError = error as AxiosError<Apiresponse>;
       const errorMessage =
         AxiosError?.response?.data?.message || "An error occurred";
@@ -82,14 +288,14 @@ const newProdcutPage = () => {
 
   return (
     <div className="flex justify-center items-center max-h-screen py-6">
-      <div className="w-full max-w-md py-5 px-8 space-y-8 bg-blue-300 rounded-lg shadow-lg">
-        <h1 className="text-xl text-center">Create New User</h1>
+      <div className="w-full max-w-md py-5 px-8 space-y-8 bg-slate-500-300 rounded-lg shadow-lg border border-black">
+        <h1 className="text-xl text-center">Create New Product</h1>
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
-            <label>productName</label>
+            <label>Product Name</label>
             <Input
               name="productName"
-              placeholder="productName"
+              placeholder="Product Name "
               value={formData.productName}
               onChange={handleChange}
             />
@@ -98,10 +304,10 @@ const newProdcutPage = () => {
             )}
           </div>
           <div>
-            <label>Full Name</label>
+            <label>Product Code</label>
             <Input
               name="productCode"
-              placeholder="Full Name"
+              placeholder="Product Code"
               value={formData.productCode}
               onChange={handleChange}
             />
@@ -110,21 +316,21 @@ const newProdcutPage = () => {
             )}
           </div>
           <div>
-            <label>Phone Number</label>
+            <label>Product Type</label>
             <Input
               name="type"
-              placeholder="10 Digit Phone Number"
+              placeholder="Type"
               value={formData.type}
               onChange={handleChange}
             />
             {errors.type && <p className="text-red-500">{errors.type}</p>}
           </div>
           <div>
-            <label>subType</label>
+            <label>Product Sub-Type</label>
             <Input
               name="subType"
               type="subType"
-              placeholder="subType"
+              placeholder="Sub Type"
               value={formData.subType}
               onChange={handleChange}
             />
@@ -143,6 +349,10 @@ const newProdcutPage = () => {
               <p className="text-red-500">{errors.description}</p>
             )}
           </div>
+          <div>
+            <label>Product Image</label>
+            <Input type="file" onChange={handleFileChange} />
+          </div>
           <Button type="submit">
             {isSubmitting ? (
               <>
@@ -150,7 +360,7 @@ const newProdcutPage = () => {
                 Please wait
               </>
             ) : (
-              "Create User"
+              "Create New Product"
             )}
           </Button>
         </form>
