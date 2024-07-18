@@ -287,7 +287,7 @@ const newProdcutPage = () => {
       }
 
       const response = await axios.post(
-        `${BACKEND_API_URL}/api/v1/products/createNewProduct`,
+        `http://localhost:5000/api/v1/products/createNewProduct`,
         formDataToSubmit,
         {
           headers: {

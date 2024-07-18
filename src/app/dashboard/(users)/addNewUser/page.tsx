@@ -213,7 +213,7 @@ function Page() {
     try {
       const requestData = { ...formData, createdBy: user.fullName };
       const response = await axios.post("/api/users", requestData);
-      console.log(response);
+      //console.log(response);
       if (response?.data?.data?.affectedRows == 1) {
         toast({
           title: "Success",
