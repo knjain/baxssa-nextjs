@@ -53,7 +53,7 @@
 //           title: "Success",
 //           description: response.data.message,
 //         });
-//         router.replace("/dashboard/users");
+//         router.replace("/admin/dashboard/users");
 //       }
 //     } catch (error) {
 //       console.log("Error in creating new User", error);
@@ -144,7 +144,7 @@
 //         </FormProvider>
 //         {/* <p>
 //           Already a member?
-//           <Link href="/sign-in" className="text-blue-600 hover:text-blue-800">
+//           <Link href="/admin/sign-in" className="text-blue-600 hover:text-blue-800">
 //             Sign in
 //           </Link>
 //         </p> */}
@@ -219,7 +219,7 @@ function Page() {
           title: "Success",
           description: "User Created successfully",
         });
-        router.replace("/dashboard/users");
+        router.replace("/admin/dashboard/users");
       }
     } catch (error) {
       console.log("Error in creating new User", error);

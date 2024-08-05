@@ -11,7 +11,7 @@ const DisplayProducts = ({ productData }: productDataProp) => {
     <div className="container mx-auto p-4">
       <div className="flex justify-between">
         <h1 className="text-3xl  text-center">ALL PRODUCTS</h1>
-        <Link href={"/dashboard/addNewProduct"} className="bg-blue-300 px-4 py-2 rounded-2xl">
+        <Link href={"/admin/dashboard/addNewProduct"} className="bg-blue-300 px-4 py-2 rounded-2xl">
           ADD NEW PRODUCT
         </Link>
       </div>

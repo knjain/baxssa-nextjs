@@ -22,7 +22,7 @@ function Navbar() {
   const handleSignOut = async () => {
     setLoading(true);
     try {
-      await signOut({ callbackUrl: "/sign-in" });
+      await signOut({ callbackUrl: "/admin/sign-in" });
     } catch (error) {
       console.error("Error signing out", error);
       toast({
@@ -48,7 +48,7 @@ function Navbar() {
       <div className="flex h-[47px] items-center justify-between px-4">
         <div className="flex items-center space-x-4">
           <Link
-            href="/dashboard"
+            href="/admin/dashboard"
             className="flex flex-row space-x-3 items-center justify-center md:hidden"
           >
             <Image

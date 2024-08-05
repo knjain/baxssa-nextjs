@@ -11,6 +11,7 @@ async function fetchData(): Promise<User[]> {
         "Cache-Control": "no-cache",
       },
     });
+    console.log(response)
     return response.data.data;
   } catch (error: any) {
     if (error.response) {

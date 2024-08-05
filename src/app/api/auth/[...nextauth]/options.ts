@@ -41,9 +41,11 @@ export const authOptions: NextAuthOptions = {
               return user;
             }
           } else {
+            console.log("first")
             throw new Error("No user found with this Email Id.");
           }
         } catch (error: any) {
+          console.log(error)
           throw new Error(error);
         }
       },
@@ -68,7 +70,7 @@ export const authOptions: NextAuthOptions = {
     },
   },
   pages: {
-    signIn: "/sign-in",
+    signIn: "/admin/sign-in",
   },
   session: {
     strategy: "jwt",
