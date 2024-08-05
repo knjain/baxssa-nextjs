@@ -1,15 +1,18 @@
-import { BASE_API_URL } from "@/constants/constants";
+import { BACKEND_API_URL } from "@/constants/constants";
 import axios from "axios";
 import React from "react";
 import DisplayProducts from "./displayProducts";
 
 async function fetchData(): Promise<Product[]> {
   try {
-    const response = await axios.get(`${BASE_API_URL}/products`, {
-      headers: {
-        "Cache-Control": "no-cache",
-      },
-    });
+    const response = await axios.get(
+      `${BACKEND_API_URL}/api/v1/products/getAllProducts`,
+      {
+        headers: {
+          "Cache-Control": "no-cache",
+        },
+      }
+    );
     return response.data.data;
   } catch (error: any) {
     if (error.response) {
@@ -26,9 +29,11 @@ async function fetchData(): Promise<Product[]> {
 
 const ProductPage = async () => {
   const products = await fetchData();
-  return <div>
-    <DisplayProducts productData={products}/>
-  </div>;
+  return (
+    <div>
+      <DisplayProducts productData={products} />
+    </div>
+  );
 };
 
 export default ProductPage;
