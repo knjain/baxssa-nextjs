@@ -4,6 +4,8 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
 import connectionPool from "../../../config/db";
 import { RowDataPacket, FieldPacket } from "mysql2";
+import axios from "axios";
+import { BACKEND_API_URL } from "@/constants/constants";
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -20,19 +22,14 @@ export const authOptions: NextAuthOptions = {
           const email = credentials.identifier;
           const password = credentials.password;
 
-          // Query the admin table to find the user
-          const query = `
-                        SELECT * FROM admin
-                        WHERE email = ?;
-                    `;
-
-          // Use the connection pool to execute the query
-          const [rows, fields] = (await connectionPool.query(query, [
-            email,
-          ])) as [RowDataPacket[], FieldPacket[]];
-          // Check if user found and password matches
-          if ([rows].length > 0) {
-            const user = rows[0];
+          const response = await axios.post(
+            `${BACKEND_API_URL}/api/v1/admin/adminLogin`,
+            { email, password }
+          );
+          console.log(response.data);
+          // Handle API response
+          if (response.status === 200) {
+            const user = response.data;
 
             // Use bcrypt to compare passwords
             const passwordMatch = await bcrypt.compare(password, user.password);
@@ -41,11 +38,11 @@ export const authOptions: NextAuthOptions = {
               return user;
             }
           } else {
-            console.log("first")
+            console.log("first");
             throw new Error("No user found with this Email Id.");
           }
         } catch (error: any) {
-          console.log(error)
+          console.log(error);
           throw new Error(error);
         }
       },
