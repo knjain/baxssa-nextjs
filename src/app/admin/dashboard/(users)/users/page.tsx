@@ -1,17 +1,20 @@
 import axios from "axios";
-import { BASE_API_URL } from "@/constants/constants";
+import { BACKEND_API_URL } from "@/constants/constants";
 import React from "react";
 import Link from "next/link";
 import { DataTable } from "./data-table";
 import { User, columns } from "./columns";
 async function fetchData(): Promise<User[]> {
   try {
-    const response = await axios.get(`${BASE_API_URL}/users`, {
-      headers: {
-        "Cache-Control": "no-cache",
-      },
-    });
-    console.log(response)
+    const response = await axios.get(
+      `${BACKEND_API_URL}/api/v1/admin/getAllUsers`,
+      {
+        headers: {
+          "Cache-Control": "no-cache",
+        },
+      }
+    );
+
     return response.data.data;
   } catch (error: any) {
     if (error.response) {
@@ -34,7 +37,7 @@ const UsersPage = async () => {
       <h1 className="text-center text-3xl">User List</h1>
       <div className=" mb-5 mt-3 md:mt-0 lg:ml-[1028px]">
         <Link
-          href={`/dashboard/addNewUser`}
+          href={`/admin/dashboard/addNewUser`}
           className=" shadow-md rounded-md bg-blue-200 md:px-6 md:py-3 px-2 py-1"
         >
           ADD NEW USER

@@ -156,7 +156,7 @@
 // export default Page;
 
 "use client";
-import React, { useState, ChangeEvent, FormEvent } from "react";
+import React, { useState, ChangeEvent, FormEvent, useEffect } from "react";
 import { z } from "zod";
 import { useRouter } from "next/navigation";
 import axios, { AxiosError } from "axios";
@@ -168,6 +168,9 @@ import { Loader2 } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { User } from "next-auth";
 import { newUserSchema } from "@/schemas/newUserSchema";
+import { getToken } from "next-auth/jwt";
+import { NextRequest, NextResponse } from "next/server";
+import { BACKEND_API_URL } from "@/constants/constants";
 
 type NewUserSchema = z.infer<typeof newUserSchema>;
 
@@ -177,6 +180,7 @@ function Page() {
     fullName: "",
     phoneNumber: "",
     password: "",
+    adminName: "",
   });
   const [errors, setErrors] = useState<Partial<NewUserSchema>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -204,6 +208,15 @@ function Page() {
     return true;
   };
 
+  useEffect(() => {
+    if (user?.fullName) {
+      setFormData((prevData) => ({
+        ...prevData,
+        adminName: user.fullName || "",
+      }));
+    }
+  }, [user]);
+
   const handleSubmit = async (e: FormEvent) => {
     console.log(formData);
     e.preventDefault();
@@ -211,10 +224,28 @@ function Page() {
 
     setIsSubmitting(true);
     try {
-      const requestData = { ...formData, createdBy: user.fullName };
-      const response = await axios.post("/api/users", requestData);
-      //console.log(response);
-      if (response?.data?.data?.affectedRows == 1) {
+      // Retrieve the token
+      // const token = await getToken({
+      //   req:request,
+      //   secret: process.env.NEXTAUTH_SECRET,
+      // });
+
+      // if (!token) {
+      //   toast({
+      //     title: "Unauthorized",
+      //     description: "You are not authorized to perform this action.",
+      //     variant: "destructive",
+      //   });
+      //   setIsSubmitting(false);
+      //   return;
+      // }
+
+      // Make the API request
+      const response = await axios.post(
+        `http://localhost:5000/api/v1/admin/createNewUser`,
+        formData
+      );
+      if (response?.data?.success) {
         toast({
           title: "Success",
           description: "User Created successfully",

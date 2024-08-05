@@ -11,4 +11,5 @@ export const newUserSchema = z.object({
     .regex(/^[0-9]+$/, { message: "Phone number should contain only digits" })
     .min(10, { message: "Phone number should be at least 10 digits long" })
     .max(15, { message: "Phone number should be at most 15 digits long" }),
+  adminName: z.string().min(1, { message: "Full name is required" }),
 });
