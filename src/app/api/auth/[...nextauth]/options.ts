@@ -26,17 +26,18 @@ export const authOptions: NextAuthOptions = {
             `${BACKEND_API_URL}/api/v1/admin/adminLogin`,
             { email, password }
           );
-          console.log(response.data);
+          console.log(response);
           // Handle API response
-          if (response.status === 200) {
-            const user = response.data;
-
-            // Use bcrypt to compare passwords
-            const passwordMatch = await bcrypt.compare(password, user.password);
-            if (passwordMatch) {
-              // Return the user object
-              return user;
-            }
+          if (response?.data?.success) {
+            // Extract user data from the response
+            const user = {
+              adminId: response.data.adminId,
+              fullName: response.data.fullName,
+              email: response.data.email,
+              token: response.data.token,
+            };
+            // Return the user object
+            return user;
           } else {
             console.log("first");
             throw new Error("No user found with this Email Id.");

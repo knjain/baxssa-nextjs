@@ -242,7 +242,7 @@ function Page() {
 
       // Make the API request
       const response = await axios.post(
-        `http://localhost:5000/api/v1/admin/createNewUser`,
+        `${BACKEND_API_URL}/api/v1/admin/createNewUser`,
         formData
       );
       if (response?.data?.success) {
