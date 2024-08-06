@@ -83,7 +83,7 @@ const NewProdcutPage = () => {
       }
 
       const response = await axios.post(
-        `http://3.7.38.119:5000/api/v1/products/createNewProduct`,
+        `http://3.108.57.17:5000/api/v1/products/createNewProduct`,
         formDataToSubmit,
         {
           headers: {
