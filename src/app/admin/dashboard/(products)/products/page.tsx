@@ -6,7 +6,7 @@ import DisplayProducts from "./displayProducts";
 async function fetchData(): Promise<Product[]> {
   try {
     const response = await axios.get(
-      `${BACKEND_API_URL}/api/v1/products/getAllProducts`,
+      `http://3.7.38.119:5000/api/v1/products/getAllProducts`,
       {
         headers: {
           "Cache-Control": "no-cache",
