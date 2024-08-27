@@ -218,7 +218,7 @@ function Page() {
   }, [user]);
 
   const handleSubmit = async (e: FormEvent) => {
-    console.log(formData);
+    //console.log(formData);
     e.preventDefault();
     if (!validate()) return;
 
@@ -242,7 +242,7 @@ function Page() {
 
       // Make the API request
       const response = await axios.post(
-        `${BACKEND_API_URL}/api/v1/admin/createNewUser`,
+        `http://3.7.38.119:5000/api/v1/admin/createNewUser`,
         formData
       );
       if (response?.data?.success) {
@@ -253,7 +253,7 @@ function Page() {
         router.replace("/admin/dashboard/users");
       }
     } catch (error) {
-      console.log("Error in creating new User", error);
+      //console.log("Error in creating new User", error);
       const AxiosError = error as AxiosError<Apiresponse>;
       const errorMessage =
         AxiosError?.response?.data?.message || "An error occurred";

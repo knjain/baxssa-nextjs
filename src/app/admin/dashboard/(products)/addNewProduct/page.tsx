@@ -23,6 +23,13 @@ const NewProdcutPage = () => {
     subType: "",
     description: "",
   });
+
+  const productTypes = [
+    { label: "FBB", value: "fbb" },
+    { label: "Rigid Box", value: "rigidBox" },
+    { label: "Corrugated Box", value: "corrugatedBox" },
+  ];
+
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [errors, setErrors] = useState<Partial<NewProductSchema>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -31,7 +38,9 @@ const NewProdcutPage = () => {
   const { data: session } = useSession();
   const user: User = session?.user as User;
 
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (
+    e: ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({ ...prevData, [name]: value }));
   };
@@ -145,7 +154,7 @@ const NewProdcutPage = () => {
             </div>
           </div>
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-            <div>
+            {/* <div>
               <label>Product Type</label>
               <Input
                 name="type"
@@ -153,6 +162,25 @@ const NewProdcutPage = () => {
                 value={formData.type}
                 onChange={handleChange}
               />
+              {errors.type && <p className="text-red-500">{errors.type}</p>}
+            </div> */}
+            <div>
+              <label>Product Type</label>
+              <select
+                name="type"
+                value={formData.type}
+                onChange={handleChange}
+                className="border border-gray-300 p-1 pb-2 rounded"
+              >
+                <option value="" disabled>
+                  Select product type
+                </option>
+                {productTypes.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </select>
               {errors.type && <p className="text-red-500">{errors.type}</p>}
             </div>
             <div>

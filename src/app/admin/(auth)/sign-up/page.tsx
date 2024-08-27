@@ -50,7 +50,7 @@ function Page() {
         router.replace("/admin/dashboard");
       }
     } catch (error) {
-      console.log("Error in creating new Admin", error);
+      //console.log("Error in creating new Admin", error);
       const AxiosError = error as AxiosError<Apiresponse>;
       let errorMessage = AxiosError?.response?.data?.message;
       toast({

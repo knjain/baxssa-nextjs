@@ -43,7 +43,7 @@ function Page() {
         identifier: data.email,
         password: data.password,
       });
-      console.log(result);
+      //console.log(result);
       if (result?.error) {
         if (result.error == "CredentialsSignin") {
           toast({
@@ -61,7 +61,7 @@ function Page() {
       }
       if (result?.url) {
         setIsSubmitting(true);
-        console.log("ehere");
+        //console.log("ehere");
         router.replace("/admin/dashboard");
       }
     } catch (error) {
